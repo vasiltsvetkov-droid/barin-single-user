@@ -19,6 +19,17 @@
   --muted: #6b6b8a;
   --radius: 14px;
   --radius-sm: 8px;
+}
+
+/* Light theme overrides */
+:root[data-theme="light"] {
+  --hdr: #ffffff;
+  --bg: #f4f5f8;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --border: #d8dce6;
+  --text: #1a1a2e;
+  --muted: #6b7280;
 
   /* Report UI (white background) */
   --report-bg: #f4f5f8;
@@ -124,6 +135,14 @@ body {
 .upload-zone:hover {
   border-color: var(--z5);
   background: #1a1a2a;
+}
+
+:root[data-theme="light"] .upload-zone.drag-over {
+  background: #fef2f2;
+}
+
+:root[data-theme="light"] .upload-zone:hover {
+  background: #f9fafb;
 }
 
 .upload-icon {
@@ -290,6 +309,11 @@ body {
   cursor: not-allowed;
 }
 
+:root[data-theme="light"] .generate-btn:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+}
+
 .generate-btn:not(:disabled):hover {
   background: #d32f2f;
 }
@@ -356,6 +380,58 @@ body {
   color: var(--muted);
   font-size: 12px;
   margin-top: 6px;
+}
+
+/* Header right controls */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Theme toggle */
+.theme-toggle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.theme-toggle:hover {
+  border-color: var(--z5);
+}
+
+/* Reset button */
+.reset-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reset-btn:hover {
+  border-color: var(--z5);
+  color: var(--z5);
+}
+
+/* Invert logo in light theme */
+:root[data-theme="light"] .header-logo {
+  filter: invert(1);
 }
 
 /* Main container */

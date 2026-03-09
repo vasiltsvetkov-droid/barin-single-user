@@ -1,0 +1,366 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Zone colors — DO NOT CHANGE */
+  --z1: #4a4a4a;   /* walk */
+  --z2: #1565C0;   /* low speed */
+  --z3: #2E7D32;   /* medium speed */
+  --z4: #F9A825;   /* high speed */
+  --z5: #C62828;   /* sprint / accent */
+  --perf: #00838F; /* performance teal */
+
+  /* App UI */
+  --hdr: #1e1e2e;
+  --bg: #0f0f17;
+  --surface: #16161f;
+  --card: #1e1e2e;
+  --border: #2a2a3e;
+  --text: #e8e8f0;
+  --muted: #6b6b8a;
+  --radius: 14px;
+  --radius-sm: 8px;
+
+  /* Report UI (white background) */
+  --report-bg: #f4f5f8;
+  --report-card: #ffffff;
+  --report-border: #e4e7ee;
+  --report-text: #1a1a2e;
+  --report-muted: #8a8fa8;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 28px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-logo {
+  max-height: 36px;
+}
+
+.header-label {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pro-badge {
+  background: var(--z5);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 50px;
+  letter-spacing: 1px;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 48px 20px 32px;
+}
+
+.hero h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.hero h1 .accent {
+  color: var(--z5);
+}
+
+.hero p {
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Upload Zone */
+.upload-zone {
+  max-width: 600px;
+  margin: 0 auto 32px;
+  padding: 48px 32px;
+  background: var(--card);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-zone.drag-over {
+  border-color: var(--z5);
+  background: #1e1e30;
+}
+
+.upload-zone:hover {
+  border-color: var(--z5);
+  background: #1a1a2a;
+}
+
+.upload-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.upload-text {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.upload-sub {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.browse-btn {
+  display: inline-block;
+  background: var(--z5);
+  color: #fff;
+  padding: 10px 28px;
+  border: none;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.browse-btn:hover {
+  background: #d32f2f;
+}
+
+/* Player Cards */
+.player-card-list {
+  max-width: 600px;
+  margin: 0 auto 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.player-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.player-card .file-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.player-card .remove-btn {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: var(--z5);
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: opacity 0.2s;
+}
+
+.player-card .remove-btn:hover {
+  opacity: 0.7;
+}
+
+.player-card .form-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.player-card input[type="text"],
+.player-card select {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 10px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.player-card input[type="text"]:focus,
+.player-card select:focus {
+  border-color: var(--z5);
+}
+
+.player-card select {
+  cursor: pointer;
+}
+
+.player-card select option {
+  background: var(--card);
+  color: var(--text);
+}
+
+.ready-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--z3);
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.ready-badge.visible {
+  opacity: 1;
+}
+
+/* Generate Section */
+.generate-section {
+  max-width: 600px;
+  margin: 0 auto 20px;
+  text-align: center;
+}
+
+.generate-btn {
+  width: 100%;
+  padding: 16px 32px;
+  background: var(--z5);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.generate-btn:disabled {
+  background: #3a3a4a;
+  color: #6b6b8a;
+  cursor: not-allowed;
+}
+
+.generate-btn:not(:disabled):hover {
+  background: #d32f2f;
+}
+
+.generate-count {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* Status Bar */
+.status-bar {
+  max-width: 600px;
+  margin: 0 auto 32px;
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+.status-bar.info {
+  background: rgba(21, 101, 192, 0.15);
+  color: #64b5f6;
+  border: 1px solid rgba(21, 101, 192, 0.3);
+}
+
+.status-bar.success {
+  background: rgba(46, 125, 50, 0.15);
+  color: #81c784;
+  border: 1px solid rgba(46, 125, 50, 0.3);
+}
+
+.status-bar.error {
+  background: rgba(198, 40, 40, 0.15);
+  color: #ef9a9a;
+  border: 1px solid rgba(198, 40, 40, 0.3);
+}
+
+/* Progress */
+.progress-bar-container {
+  max-width: 600px;
+  margin: 0 auto 16px;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--z5);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.progress-text {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+/* Main container */
+.app-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}

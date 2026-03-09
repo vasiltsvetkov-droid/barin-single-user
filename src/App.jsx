@@ -8,6 +8,21 @@ export default function App() {
   const [files, setFiles] = useState([]);
   const [status, setStatus] = useState(null); // { type: 'info'|'success'|'error', message }
   const [progress, setProgress] = useState(null); // { current, total }
+  const [theme, setTheme] = useState('dark');
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      return next;
+    });
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setFiles([]);
+    setStatus(null);
+    setProgress(null);
+  }, []);
 
   const handleFilesAdded = useCallback((newFiles) => {
     const entries = Array.from(newFiles)
@@ -83,7 +98,17 @@ export default function App() {
           />
           <span className="header-label">Report Generator</span>
         </div>
-        <span className="pro-badge">PRO</span>
+        <div className="header-right">
+          {files.length > 0 && (
+            <button className="reset-btn" onClick={handleReset}>
+              Reset
+            </button>
+          )}
+          <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+          <span className="pro-badge">PRO</span>
+        </div>
       </header>
 
       <div className="app-container">

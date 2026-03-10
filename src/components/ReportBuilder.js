@@ -654,14 +654,20 @@ function buildSingleBarChart(players, chart) {
       <div class="bar-track">
         <div class="bar-fill" style="width:${pct.toFixed(1)}%; background:${chart.color};">${fmtVal(v)}${chart.unit}</div>
         <div class="bar-avg-line" style="left:${avgPct.toFixed(1)}%"></div>
-        <div class="bar-avg-label" style="left:${avgPct.toFixed(1)}%">${fmtVal(avgVal)}${chart.unit}</div>
       </div>
     </div>`;
   }).join('');
 
   return `<div class="page">
   <div class="chart-title">${chart.title}</div>
-  <div class="bar-chart">${rows}</div>
+  <div class="bar-chart">${rows}
+    <div class="bar-row bar-avg-row">
+      <div class="bar-label"></div>
+      <div class="bar-track" style="background:transparent; height:auto;">
+        <div class="bar-avg-label" style="left:${avgPct.toFixed(1)}%">${fmtVal(avgVal)}${chart.unit}</div>
+      </div>
+    </div>
+  </div>
 </div>`;
 }
 
@@ -683,7 +689,6 @@ function buildAccDecChart(players) {
       <div class="bar-track">
         <div class="bar-fill" style="width:${accPct.toFixed(1)}%; background:#00897B;">${p.acc}</div>
         <div class="bar-avg-line" style="left:${accAvgPct.toFixed(1)}%"></div>
-        <div class="bar-avg-label" style="left:${accAvgPct.toFixed(1)}%">${Math.round(avgAcc)}</div>
       </div>
     </div>
     <div class="bar-row">
@@ -691,14 +696,29 @@ function buildAccDecChart(players) {
       <div class="bar-track">
         <div class="bar-fill" style="width:${decPct.toFixed(1)}%; background:#5C6BC0;">${p.dec}</div>
         <div class="bar-avg-line" style="left:${decAvgPct.toFixed(1)}%"></div>
-        <div class="bar-avg-label" style="left:${decAvgPct.toFixed(1)}%">${Math.round(avgDec)}</div>
       </div>
     </div>`;
   }).join('');
 
+  const accAvgPctFinal = chartMax > 0 ? (avgAcc / chartMax) * 100 : 0;
+  const decAvgPctFinal = chartMax > 0 ? (avgDec / chartMax) * 100 : 0;
+
   return `<div class="page">
   <div class="chart-title">Accelerations &amp; Decelerations</div>
-  <div class="bar-chart">${rows}</div>
+  <div class="bar-chart">${rows}
+    <div class="bar-row bar-avg-row">
+      <div class="bar-label" style="font-size:9px; color:#00897B;">Acc avg</div>
+      <div class="bar-track" style="background:transparent; height:auto;">
+        <div class="bar-avg-label" style="left:${accAvgPctFinal.toFixed(1)}%; color:#00897B;">${Math.round(avgAcc)}</div>
+      </div>
+    </div>
+    <div class="bar-row bar-avg-row">
+      <div class="bar-label" style="font-size:9px; color:#5C6BC0;">Dec avg</div>
+      <div class="bar-track" style="background:transparent; height:auto;">
+        <div class="bar-avg-label" style="left:${decAvgPctFinal.toFixed(1)}%; color:#5C6BC0;">${Math.round(avgDec)}</div>
+      </div>
+    </div>
+  </div>
 </div>`;
 }
 
@@ -788,8 +808,9 @@ body { background: #f4f5f8; font-family: 'DM Sans', sans-serif; color: #1a1a2e; 
              white-space: nowrap; min-width: 6px; }
 .bar-avg-line  { position: absolute; top: -4px; bottom: -4px; width: 2px;
                  background: #C62828; border-radius: 2px; z-index: 2; }
-.bar-avg-label { position: absolute; bottom: -18px; font-size: 9px; color: #C62828;
+.bar-avg-label { position: absolute; top: 0; font-size: 9px; color: #C62828;
                  font-weight: 700; transform: translateX(-50%); white-space: nowrap; }
+.bar-avg-row .bar-track { position: relative; height: 14px !important; }
 
 .targets-table { width: 100%; border-collapse: separate; border-spacing: 0;
                  border-radius: 8px; overflow: hidden; border: 1px solid #e4e7ee; }

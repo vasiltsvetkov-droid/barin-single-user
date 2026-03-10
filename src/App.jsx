@@ -1,14 +1,24 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import UploadZone from './components/UploadZone';
 import PlayerCardList from './components/PlayerCardList';
 import GenerateButton from './components/GenerateButton';
+import NeuralBackground from './components/NeuralBackground';
 import { parseCSVText, computeMetrics, buildReport, downloadHTML } from './components/ReportBuilder';
+
+const LOGO_DARK = 'https://i.imgur.com/LgVMPLV.png';  // white logo with red 360
+const LOGO_LIGHT = 'https://i.imgur.com/7piXXXA.png'; // black logo with red 360
 
 export default function App() {
   const [files, setFiles] = useState([]);
-  const [status, setStatus] = useState(null); // { type: 'info'|'success'|'error', message }
-  const [progress, setProgress] = useState(null); // { current, total }
+  const [status, setStatus] = useState(null);
+  const [progress, setProgress] = useState(null);
   const [theme, setTheme] = useState('dark');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const toggleTheme = useCallback(() => {
     setTheme((prev) => {
@@ -88,14 +98,28 @@ export default function App() {
 
   return (
     <>
+      {/* Loading Screen */}
+      <div className={`loading-screen${loading ? '' : ' hidden'}`}>
+        <div className="loader-container">
+          <div className="loader-spinner"></div>
+          <div className="loader-text">Barin Sports 360</div>
+        </div>
+      </div>
+
+      {/* Neural Network Background */}
+      <NeuralBackground theme={theme} />
+
+      {/* Header */}
       <header className="app-header">
         <div className="header-left">
-          <img
-            src="https://i.imgur.com/hHgp1iR.png"
-            alt="Barin Sports PRO"
-            className="header-logo"
-            onError={(e) => { e.target.style.display = 'none'; }}
-          />
+          <a href="https://barinsports.com/" target="_blank" rel="noopener noreferrer">
+            <img
+              src={theme === 'dark' ? LOGO_DARK : LOGO_LIGHT}
+              alt="Barin Sports PRO"
+              className="header-logo"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+          </a>
           <span className="header-label">Report Generator</span>
         </div>
         <div className="header-right">
@@ -105,12 +129,29 @@ export default function App() {
             </button>
           )}
           <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
-            {theme === 'dark' ? '☀️' : '🌙'}
+            {theme === 'dark' ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            )}
           </button>
           <span className="pro-badge">PRO</span>
         </div>
       </header>
 
+      {/* Main Content */}
       <div className="app-container">
         <div className="hero">
           <h1>Upload CSVs, get your <span className="accent">report</span>.</h1>
@@ -156,6 +197,13 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {/* Footer */}
+      <footer className="app-footer">
+        <div className="footer-content">
+          <p>&copy; 2024 Barin Sports 360. All rights reserved.</p>
+        </div>
+      </footer>
     </>
   );
 }

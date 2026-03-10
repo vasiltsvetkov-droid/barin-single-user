@@ -203,7 +203,10 @@ export function buildReport(players) {
   // Page 8 — Targets
   pages += buildTargetsPage(players);
 
-  // Pages 9-23 — Bar Charts
+  // Page 9 — Targets Intensity
+  pages += buildTargetsIntensityPage(players);
+
+  // Pages 10-24 — Bar Charts
   pages += buildBarCharts(players);
 
   return wrapReport(pages, players);
@@ -260,6 +263,29 @@ function recalcTargets() {
         el.textContent = '\\u2013'; el.className = 'pct-display na'; return;
       }
       var pct = Math.round(a[m] / norm * 100);
+      el.textContent = pct + '%';
+      el.className = 'pct-display ' + (pct >= 85 ? 'pct-ok' : pct >= 60 ? 'pct-mid' : 'pct-low');
+    });
+  });
+}
+
+function recalcIntensity() {
+  var refTime = parseFloat(document.getElementById('int_ref_time') ? document.getElementById('int_ref_time').value : '') || 0;
+  ['he','tee','ed','hmld','d345','acc','dec'].forEach(function(m) {
+    var normEl = document.getElementById('int_norm_' + m);
+    var norm = normEl ? parseFloat(normEl.value) : NaN;
+    ACTUALS.forEach(function(a, i) {
+      var el = document.getElementById('int_pct_' + i + '_' + m);
+      if (!el) return;
+      var playerTime = parseFloat(document.getElementById('int_time_' + i) ? document.getElementById('int_time_' + i).value : '') || 0;
+      if (m === 'he' && a[m] === null) {
+        el.textContent = '\\u2013'; el.className = 'pct-display na'; return;
+      }
+      if (a[m] === null || !norm || isNaN(norm) || !refTime || !playerTime) {
+        el.textContent = '\\u2013'; el.className = 'pct-display na'; return;
+      }
+      var adjustedNorm = norm * (playerTime / refTime);
+      var pct = Math.round(a[m] / adjustedNorm * 100);
       el.textContent = pct + '%';
       el.className = 'pct-display ' + (pct >= 85 ? 'pct-ok' : pct >= 60 ? 'pct-mid' : 'pct-low');
     });
@@ -594,6 +620,64 @@ function buildTargetsPage(players) {
   <div class="page-title">Targets</div>
   <div style="background:#e3f2fd; border:1px solid #90caf9; border-radius:8px; padding:10px 16px; margin-bottom:16px; font-size:12px; color:#1565C0;">
     Enter target/norm values. Percentages update live.
+  </div>
+  <table class="targets-table">
+    <thead>${thRow}</thead>
+    <tbody>${normRow}${playerRows}</tbody>
+  </table>
+</div>`;
+}
+
+function buildTargetsIntensityPage(players) {
+  const metrics = [
+    { key: 'he', label: 'Heart Exertion' },
+    { key: 'tee', label: 'Total NRG (kJ/kg)' },
+    { key: 'ed', label: 'Equiv. Distance (m)' },
+    { key: 'hmld', label: 'HMLD (m)' },
+    { key: 'd345', label: 'Distance 3+4+5 (m)' },
+    { key: 'acc', label: 'Accelerations' },
+    { key: 'dec', label: 'Decelerations' },
+  ];
+
+  const thRow = `<tr style="background:#1e1e2e;">
+    <th style="text-align:left;">Player</th>
+    <th>Active Time</th>
+    ${metrics.map(m => `<th>${m.label}</th>`).join('')}
+  </tr>`;
+
+  const normRow = `<tr style="background:#fffde7;">
+    <td style="font-weight:700; text-align:left; background:#fffde7;">Match Reference</td>
+    <td style="background:#fffde7;"><input class="norm-input" type="number" id="int_ref_time" oninput="recalcIntensity()" placeholder="90" style="width:60px;"> min</td>
+    ${metrics.map(m =>
+      `<td style="background:#fffde7;"><input class="norm-input" type="number" id="int_norm_${m.key}" oninput="recalcIntensity()" placeholder="—"></td>`
+    ).join('')}
+  </tr>`;
+
+  const playerRows = players.map((p, i) => {
+    const actual = (m) => m.key === 'he'
+      ? (p.hasHR ? fmt(p.hExert, 1) : '–')
+      : m.key === 'tee' ? fmt(p.tee, 2)
+      : m.key === 'ed' ? Math.round(p.ed)
+      : m.key === 'hmld' ? Math.round(p.hmld)
+      : m.key === 'd345' ? Math.round(p.d345)
+      : m.key === 'acc' ? p.acc
+      : p.dec;
+    return `<tr>
+      <td class="player-td">${esc(p.name)}</td>
+      <td><input class="norm-input" type="number" id="int_time_${i}" oninput="recalcIntensity()" placeholder="—" style="width:60px;"> min</td>
+      ${metrics.map(m => {
+        return `<td>
+          <span id="int_pct_${i}_${m.key}" class="pct-display na">–</span>
+          <span class="actual">${actual(m)}</span>
+        </td>`;
+      }).join('')}
+    </tr>`;
+  }).join('');
+
+  return `<div class="page">
+  <div class="page-title">Targets Intensity</div>
+  <div style="background:#e3f2fd; border:1px solid #90caf9; border-radius:8px; padding:10px 16px; margin-bottom:16px; font-size:12px; color:#1565C0;">
+    Enter full match reference time &amp; norms, then each player's actual active time. Targets are pro-rated and percentages update live.
   </div>
   <table class="targets-table">
     <thead>${thRow}</thead>
